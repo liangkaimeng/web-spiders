@@ -1,0 +1,10 @@
+neutral -> 中立的
+sexual-organ -> 性器官
+sexual-behaviour -> 性行为
+cartoon-pornography -> 卡通色情
+naked-breast -> 裸胸
+terrorism -> 恐怖主义
+extreme-religion -> 极端宗教主义
+bloody -> 血腥
+political -> 涉政
+abuse -> 辱骂
