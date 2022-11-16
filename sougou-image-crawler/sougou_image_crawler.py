@@ -25,6 +25,7 @@ class SougouImageCrawler:
         }
 
     def request_url(self, page_num, keyword):
+        """ 请求链接，返回数据JSON """
         url = "https://pic.sogou.com/napi/pc/searchList?mode=1&start={}&xml_len=48&query={}".format(page_num, keyword)
         session = requests.session()
         session.mount('https://', requests.adapters.HTTPAdapter(max_retries=10))
@@ -41,6 +42,7 @@ class SougouImageCrawler:
         return response
 
     def upload_image_local_path(self, json_files):
+        """ 解析图片，保存图片到本地 """
         global keyword
         if not json_files:
             pass
