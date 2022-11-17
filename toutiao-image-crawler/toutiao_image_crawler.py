@@ -131,7 +131,10 @@ class CrawlerRun(RequestURL):
             for page in grip_params["page_num"]:
                 print("正在采集【{}】，第{}页！".format(keyword, page))
                 response = self.request_url(keyword=keyword, search_id=grip_params["keywords"][keyword], pageNum=page)
-                self.extract_json_info(json_info=response)
+                if response:
+                    self.extract_json_info(json_info=response)
+                else:
+                    pass
 
 
 if __name__ == "__main__":
