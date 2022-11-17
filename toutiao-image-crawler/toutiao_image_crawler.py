@@ -21,12 +21,12 @@ class RequestURL:
             "Cookie": "msToken=KqGRTq14LOFyzuimd7asNbqd0uZY7DgXgyq70yrn6lRKeAJ91YSRVdJChnaue81jjjvnr-UqfHBwlJBsjjhMjKVqCluwwG7zcADyb3cFHw4s; tt_webid=7166432939261134367; _tea_utm_cache_4916=undefined; _S_DPR=1.25; _S_IPAD=0; MONITOR_WEB_ID=7166432939261134367; ttwid=1%7C6mtaRB-MQ9ZNaBlBFLn5IP3dZ7Jg-v8Mm_0RWrlBD6U%7C1668568822%7Cb97b77146bd9549a7bc80e7c1b7ff53370b003e781d8c51f856b53955b343cd8; __ac_nonce=06374804c0004c5ba62fe; __ac_signature=_02B4Z6wo00f01qoaqUgAAIDBGutFg04JteaqO63AAMn-87; __ac_referer=https://so.toutiao.com/search?dvpf=pc&source=input&keyword=%E6%81%90%E6%80%96%E5%88%86%E5%AD%90; _S_WIN_WH=1536_720"
         }
 
-    def request_url(self, _keyword, search_id, pageNum):
+    def request_url(self, keyword, search_id, pageNum):
         """ 发送请求，返回请求内容json """
         params = {
             "dvpf": "pc",
             "source": "search_subtab_switch",
-            "keyword": _keyword,
+            "keyword": keyword,
             "pd": "atlas",
             "action_type": "search_subtab_switch",
             "page_num": pageNum,
@@ -52,11 +52,12 @@ class RequestURL:
 
     def extract_json_info(self, json_info):
         """ 解析json内容，保存图片到本地路径 """
-        global _keyword
+        # global keyword
+
         if not json_info:
             pass
         else:
-            save_file_path = self.path + "今日头条图片数据集/" + _keyword + "/"
+            save_file_path = self.path + "今日头条图片数据集/" + keyword + "/"
             if not os.path.exists(save_file_path):  # 判断文件夹是否存在，不存在则创建
                 os.makedirs(save_file_path)
 
@@ -68,7 +69,7 @@ class RequestURL:
                 session.mount('https://', requests.adapters.HTTPAdapter(max_retries=10))
                 try:
                     img_content = session.request("GET", url=img_url, headers=self.headers, timeout=30).content
-                    with open(save_file_path + str(abs(int(contents.get("id")))) + ".jpeg", "wb") as f:
+                    with open(save_file_path + str(abs(int(content.get("id")))) + ".jpeg", "wb") as f:
                         f.write(img_content)
                 except (SSLError, ConnectionError, ConnectTimeout):
                     pass
@@ -81,6 +82,7 @@ class CrawlerRun(RequestURL):
         self.run()
 
     def run(self):
+        global keyword
         grip_params = {
             "page_num": range(21),
             "keywords": {
@@ -125,10 +127,10 @@ class CrawlerRun(RequestURL):
                 "赌博": "20221116180050010212046101164BBD50"
             }
         }
-        for word in grip_params["keywords"].keys():
+        for keyword in grip_params["keywords"].keys():
             for page in grip_params["page_num"]:
-                print("正在采集【{}】，第{}页！".format(word, page))
-                response = self.request_url(_keyword=word, search_id=grip_params["keywords"][word], pageNum=page)
+                print("正在采集【{}】，第{}页！".format(keyword, page))
+                response = self.request_url(keyword=keyword, search_id=grip_params["keywords"][keyword], pageNum=page)
                 self.extract_json_info(json_info=response)
 
 
