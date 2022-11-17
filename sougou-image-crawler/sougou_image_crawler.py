@@ -8,7 +8,7 @@ import re
 import time
 import warnings
 import requests
-from requests.exceptions import SSLError, ConnectionError, ConnectTimeout
+from requests.exceptions import SSLError, ConnectionError, ConnectTimeout, InvalidSchema
 
 warnings.filterwarnings("ignore")
 
@@ -64,7 +64,7 @@ class SougouImageCrawler:
                     img_content = session.request("GET", url=img_url, headers=self.headers, timeout=30).content
                     with open(save_file_path + img_name + ".jpg", "wb") as f:
                         f.write(img_content)
-                except (SSLError, ConnectionError, ConnectTimeout):
+                except (SSLError, ConnectionError, ConnectTimeout, InvalidSchema):
                     pass
 
 
