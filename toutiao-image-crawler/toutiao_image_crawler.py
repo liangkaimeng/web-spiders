@@ -52,11 +52,11 @@ class RequestURL:
 
     def extract_json_info(self, json_info):
         """ 解析json内容，保存图片到本地路径 """
-        global keyword
+        global _keyword
         if not json_info:
             pass
         else:
-            save_file_path = self.path + "今日头条图片数据集/" + keyword + "/"
+            save_file_path = self.path + "今日头条图片数据集/" + _keyword + "/"
             if not os.path.exists(save_file_path):  # 判断文件夹是否存在，不存在则创建
                 os.makedirs(save_file_path)
 
