@@ -6,7 +6,7 @@ import os
 import warnings
 import requests
 from urllib.parse import *
-from requests.exceptions import SSLError, ConnectionError, ConnectTimeout
+from requests.exceptions import SSLError, ConnectionError, ConnectTimeout, ReadTimeout
 
 warnings.filterwarnings("ignore")
 
@@ -42,7 +42,7 @@ class RequestURL:
         response = None  # 定义返回内容为None
         try:
             response = session.request("GET", url=url, headers=self.headers, verify=False, timeout=30)  # 发送请求
-        except (SSLError, ConnectionError, ConnectTimeout):
+        except (SSLError, ConnectionError, ConnectTimeout, ReadTimeout):
             pass
 
         if response:
@@ -71,7 +71,7 @@ class RequestURL:
                     img_content = session.request("GET", url=img_url, headers=self.headers, timeout=30).content
                     with open(save_file_path + str(abs(int(content.get("id")))) + ".jpeg", "wb") as f:
                         f.write(img_content)
-                except (SSLError, ConnectionError, ConnectTimeout):
+                except (SSLError, ConnectionError, ConnectTimeout, ReadTimeout):
                     pass
 
 
@@ -130,10 +130,13 @@ class CrawlerRun(RequestURL):
         for keyword in grip_params["keywords"].keys():
             for page in grip_params["page_num"]:
                 print("正在采集【{}】，第{}页！".format(keyword, page))
-                response = self.request_url(keyword=keyword, search_id=grip_params["keywords"][keyword], pageNum=page)
-                if response:
-                    self.extract_json_info(json_info=response)
-                else:
+                try:
+                    response = self.request_url(keyword=keyword, search_id=grip_params["keywords"][keyword], pageNum=page)
+                    if response:
+                        self.extract_json_info(json_info=response)
+                    else:
+                        pass
+                except (SSLError, ConnectionError, ConnectTimeout, ReadTimeout, TypeError):
                     pass
 
 
